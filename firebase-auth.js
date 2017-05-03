@@ -30,6 +30,8 @@ $('.login').on('click', function (event) {
 	let password = $('.signInPassword').val();
 	console.log( email , password)
 firebase.auth().signInWithEmailAndPassword(email, password)
+.then(user => user.getToken())
+.then(JWT => console.log(JWT))
 .then( function (response){
 	console.log(response)
 	$('.box').show()
@@ -73,8 +75,7 @@ $('#signOutButton').on('click',function () {
   };
   firebase.initializeApp(config);
 
-console.log(firebase.auth())
-console.log(firebase.auth().currentUser)
+
 
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -86,7 +87,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 		$('.chatButton').show()
 		$('.userName').hide()
 		$('#signOutButton').show()
-    console.log(user)
   } else {
     // No user is signed in.
     return null
@@ -98,20 +98,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 $('#messaging').submit(function (e) {
 	e.preventDefault();
-	console.log(e)
 	let words = $('.chat').val();
 	$('.userText').append("<li>" + words + "</li>");
 	$('.chat').val("");
+	  firebase.database().ref('message/').push({
+	    emails: "Filusmarvin13@gmail.com",
+	    text: "Anything ",
+	  });
 })
 
 
 var database = firebase.database();
-
-function writeUserData(userId, name, email) {
-  firebase.database().ref('users/' + userId).set({
-    username: name,
-    email: email,
-    text: "",
-  });
-  console.log(firebase.database().ref('users/' + userId))
-}
