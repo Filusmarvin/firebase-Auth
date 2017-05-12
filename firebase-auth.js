@@ -3,8 +3,11 @@ $('.chat').hide()
 $('.chatButton').hide()
 $('#signOutButton').hide()
 
+let email ="";
+let text = "";
+
 $('#signUpButton').on('click', function (event) {
-	let email = $('#signUpEmail').val()
+	email = $('#signUpEmail').val()
 	let password = $('#signUpPassword').val()
 	console.log(email , password)
 	firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -26,14 +29,13 @@ $('#signUpButton').on('click', function (event) {
 });
 
 $('.login').on('click', function (event) {
-	let email = $('.signInEmail').val();;
+	email = $('.signInEmail').val();
 	let password = $('.signInPassword').val();
 	console.log( email , password)
 firebase.auth().signInWithEmailAndPassword(email, password)
 .then(user => user.getToken())
 .then(JWT => console.log(JWT))
 .then( function (response){
-	console.log(response)
 	$('.box').show()
 	$('.chat').show()
 	$('.chatButton').show()
@@ -96,15 +98,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
 
-$('#messaging').submit(function (e) {
+$('#messaging').submit(function (e ) {
 	e.preventDefault();
 	let words = $('.chat').val();
 	$('.userText').append("<li>" + words + "</li>");
 	$('.chat').val("");
 	  firebase.database().ref('message/').push({
-	    emails: "Filusmarvin13@gmail.com",
-	    text: "Anything ",
+	    emails: email,
+	    text: words,
 	  });
+		console.log(email)
 })
 
 
