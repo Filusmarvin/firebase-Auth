@@ -2,6 +2,7 @@ $('.box').hide()
 $('.chat').hide()
 $('.chatButton').hide()
 $('#signOutButton').hide()
+$('.uid').hide()
 
 let email ="";
 let text = "";
@@ -18,6 +19,7 @@ $('#signUpButton').on('click', function (event) {
 			$('.box').show()
 			$('.chat').show()
 			$('.chatButton').show()
+
 		}
 	})
 	.catch(function(error) {
@@ -89,26 +91,44 @@ firebase.auth().onAuthStateChanged(function(user) {
 		$('.chatButton').show()
 		$('.userName').hide()
 		$('#signOutButton').show()
+		$('.uid').text(user.uid)
+
+firebase.database().ref("message/").on('value',function(snapshot){
+	snapshot.forEach(function(childSnapshot){
+        postChat(childSnapshot);
+      });
+})
   } else {
     // No user is signed in.
     return null
   }
 });
 
+function postChat(data){
+  if($("#" + data.key).length == 0) {
+    let val = data.val();
+    var container = document.createElement('div');
+    container.innerHTML = "<div><p class='chip'>"+val.message+"</p><h6>"+val.email+"</h6></div>";
+    div = container.firstChild;
+    div.setAttribute('id', data.key);
+      $( ".chat" ).append(div);
+  }
+}
 
 
+var base = firebase.database();
 
-$('#messaging').submit(function (e ) {
+$('#messaging').submit(function (e, user ) {
 	e.preventDefault();
+	console.log(user)
 	let words = $('.chat').val();
+	let uid = $('.uid').text()
+	console.log(uid)
 	$('.userText').append("<li>" + words + "</li>");
 	$('.chat').val("");
-	  firebase.database().ref('message/').push({
-	    emails: email,
-	    text: words,
-	  });
-		console.log(email)
+	  firebase.database().ref(`message/`).push({
+	    text: words
+	  }).on('value',function(snapshot) {
+			console.log(snapshot.val())
+		})
 })
-
-
-var database = firebase.database();
