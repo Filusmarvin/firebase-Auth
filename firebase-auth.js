@@ -93,7 +93,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		$('#signOutButton').show()
 		$('.uid').text(user.uid)
 
-firebase.database().ref("message/").on('value',function(snapshot){
+firebase.database().ref("message").on('value',function(snapshot){
 	snapshot.forEach(function(childSnapshot){
         postChat(childSnapshot);
       });
@@ -104,14 +104,24 @@ firebase.database().ref("message/").on('value',function(snapshot){
   }
 });
 
+// function postChat(data){
+//     let val = data.val().text;
+// 		console.log(val)
+//     // var container = document.createElement('div');
+//     // container.innerHTML = "<div><p class='chip'>"+val.text+"</p><h6>"+val.email+"</h6></div>";
+//     // div = container.firstChild;
+//     // // div.setAttribute('id', data.key);
+//       $( ".userText" ).append("<li>" + data.val().text + "</li>")
+// }
+
 function postChat(data){
   if($("#" + data.key).length == 0) {
     let val = data.val();
     var container = document.createElement('div');
-    container.innerHTML = "<div><p class='chip'>"+val.message+"</p><h6>"+val.email+"</h6></div>";
+    container.innerHTML = "<div><p class='chip'>"+val.text+"</p></div>";
     div = container.firstChild;
     div.setAttribute('id', data.key);
-      $( ".chat" ).append(div);
+      $( ".userText" ).append(div);
   }
 }
 
