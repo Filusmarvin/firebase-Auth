@@ -134,7 +134,7 @@ $('#messaging').submit(function (e, user ) {
 	let words = $('.chat').val();
 	let uid = $('.uid').text()
 	console.log(uid)
-	$('.userText').append("<li>" + words + "</li>");
+	// $('.userText').append("<li>" + words + "</li>");
 	$('.chat').val("");
 	  firebase.database().ref(`message/`).push({
 	    text: words
